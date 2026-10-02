@@ -364,6 +364,17 @@ const runCommand = async (
     return { text: 'BasePaint pane opened.' }
   }
   if (arg.kind === 'invalid') return { text: `BasePaint: ${arg.reason}` }
+  if (arg.kind === 'default') {
+    // A --plugin-dir plugin's key may be `<name>@inline`, so find the row by owner, not by name.
+    const rows = await $.config.list()
+    const row = rows.find(r => r.provider.plugin === $.plugin.name && r.key.endsWith('.mode'))
+    if (!row) return { text: "BasePaint: couldn't find the mode setting; use /plugin configure instead." }
+    const res = await $.config.set({ key: row.key, value: arg.mode })
+    if ('deny' in res && res.deny) return { text: `BasePaint: couldn't save default (${res.deny}).` }
+    await update($, modeOverride, () => arg.mode)
+
+    return { text: `BasePaint: default mode set to ${arg.mode}.` }
+  }
 
   const today = currentDay(await nowSec($))
   let next: number

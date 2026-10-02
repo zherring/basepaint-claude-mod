@@ -99,6 +99,7 @@ export type ModeArg =
   | { kind: 'today' }
   | { kind: 'random' }
   | { kind: 'number'; day: number }
+  | { kind: 'default'; mode: 'today' | 'random' }
   | { kind: 'invalid'; reason: string }
 
 export const parseModeArg = (args: string): ModeArg => {
@@ -106,7 +107,15 @@ export const parseModeArg = (args: string): ModeArg => {
   if (a === '') return { kind: 'toggle' }
   if (a === 'today' || a === 'random') return { kind: a }
   if (/^\d+$/.test(a)) return { kind: 'number', day: Number(a) }
-  return { kind: 'invalid', reason: `unknown argument "${args.trim()}" (use today, random or a day number)` }
+  if (a === 'default' || a.startsWith('default ')) {
+    const m = a.slice('default'.length).trim()
+    if (m === 'today' || m === 'random') return { kind: 'default', mode: m }
+    return { kind: 'invalid', reason: 'use "default today" or "default random"' }
+  }
+  return {
+    kind: 'invalid',
+    reason: `unknown argument "${args.trim()}" (use today, random, default <today|random> or a day number)`,
+  }
 }
 
 export const parseStats = (data: unknown): BasepaintStats | null => {

@@ -1,6 +1,6 @@
 {
   "name": "basepaint",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Live BasePaint canvas and activity feed while Claude works",
   "types": "./types/index.d.ts",
   "userConfig": {

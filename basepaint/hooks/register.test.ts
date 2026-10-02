@@ -326,3 +326,55 @@ describe('random day mode', () => {
     await clock.settle()
   })
 })
+
+describe('/basepaint default', () => {
+  const row = { key: 'basepaint@inline.mode', label: 'Canvas', kind: 'choice', value: 'today',
+    options: ['today', 'random'], provider: { plugin: 'basepaint', tier: 'plugin' }, isLocked: false }
+  const setupConfig = (on: any, deny?: string) => {
+    const sets: any[] = []
+    on('config.list', () => ({ value: [row] }))
+    on('config.set', (_$: any, e: any) => {
+      sets.push({ key: e.key, value: e.value })
+      return deny ? { deny } : { value: e.value }
+    })
+    return sets
+  }
+
+  test('default random writes config and applies to the session', async ($, on) => {
+    const { clock, opened, urls } = setupPast($, on)
+    const sets = setupConfig(on)
+    const res = await $.command.run({ ...RUN, args: 'default random' })
+    expect(res.text).toBe('BasePaint: default mode set to random.')
+    expect(sets).toEqual([{ key: 'basepaint@inline.mode', value: 'random' }])
+    expect(opened).toEqual([])
+    await $.command.run(RUN) // opening now honours the override
+    await clock.settle()
+    expect(opened).toEqual(['basepaint'])
+    expect(urls.some(u => u.includes('/api/theme/') && !u.includes(`/api/theme/${today}`))).toBe(true)
+    await $.command.run(RUN)
+    await clock.settle()
+  })
+
+  test('default with a bad argument is invalid', async ($, on) => {
+    const { clock } = setupPast($, on)
+    const sets = setupConfig(on)
+    for (const args of ['default', 'default 5']) {
+      const res = await $.command.run({ ...RUN, args })
+      expect(res.text).toBe('BasePaint: use "default today" or "default random"')
+    }
+    expect(sets).toEqual([])
+    await clock.settle()
+  })
+
+  test('a deny is surfaced and the override is not written', async ($, on) => {
+    const { clock, urls } = setupPast($, on)
+    setupConfig(on, 'locked by policy')
+    const res = await $.command.run({ ...RUN, args: 'default random' })
+    expect(res.text).toBe("BasePaint: couldn't save default (locked by policy).")
+    await $.command.run(RUN)
+    await clock.settle()
+    expect(urls.some(u => u.includes('/api/theme/') && !u.includes(`/api/theme/${today}`))).toBe(false)
+    await $.command.run(RUN)
+    await clock.settle()
+  })
+})

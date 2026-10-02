@@ -25,6 +25,7 @@ claude plugin install basepaint@basepaint-claude-mod
 | `/basepaint` | Toggle the pane |
 | `/basepaint today` | Show the live canvas |
 | `/basepaint random` | Show a random past day |
+| `/basepaint default <today\|random>` | Save the default mode to the plugin config |
 | `/basepaint <day>` | Show a specific day, e.g. `/basepaint 100` |
 
 ## Configuration
@@ -34,7 +35,7 @@ claude plugin install basepaint@basepaint-claude-mod
 | `autoOpen` | boolean | `true` | Open the pane automatically when Claude starts working |
 | `mode` | string | `today` | `today` for the live canvas, `random` for a random past day |
 
-Set these from the `/plugin` menu: select the basepaint plugin and edit its configuration.
+Set these from the `/plugin` menu: select the basepaint plugin and edit its configuration. `/basepaint default <today|random>` is the command equivalent of `/plugin configure` for `mode`.
 
 ## Network
 
