@@ -1,0 +1,39 @@
+{
+  "name": "basepaint",
+  "version": "0.1.0",
+  "description": "Live BasePaint canvas and activity feed while Claude works",
+  "types": "./types/index.d.ts",
+  "userConfig": {
+    "autoOpen": {
+      "type": "boolean",
+      "title": "Auto-open",
+      "description": "Open the BasePaint pane automatically when Claude starts working",
+      "default": true
+    },
+    "mode": {
+      "type": "string",
+      "title": "Canvas",
+      "description": "Show today's live canvas or a random past day",
+      "options": [
+        "today",
+        "random"
+      ],
+      "default": "today"
+    }
+  },
+  "author": {
+    "name": "zherring",
+    "url": "https://github.com/zherring"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/zherring/basepaint-claude-mod",
+  "repository": "https://github.com/zherring/basepaint-claude-mod",
+  "keywords": [
+    "basepaint",
+    "base",
+    "pixel-art",
+    "nft",
+    "pane",
+    "mod"
+  ]
+}

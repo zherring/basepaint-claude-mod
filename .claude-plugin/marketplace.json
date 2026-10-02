@@ -1,0 +1,8 @@
+{
+  "name": "basepaint-claude-mod",
+  "owner": { "name": "zherring", "url": "https://github.com/zherring" },
+  "metadata": { "description": "BasePaint mods for Claude Code" },
+  "plugins": [
+    { "name": "basepaint", "source": "./basepaint", "description": "Live BasePaint canvas and activity feed while Claude works" }
+  ]
+}
